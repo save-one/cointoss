@@ -1,2 +1,19 @@
-<h1>Notes#show</h1>
-<p>Find me in app/views/notes/show.html.erb</p>
+<div>
+
+ <%= form_for(@note, url: note_path, html: {:class => "form-group"}) do |f| %>
+ <div>
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+ </div>
+
+  <div>
+   <%= f.fields_for(:targets) do |ft| %>
+    <%= f.label :name %>
+  	<%= ft.text_field :name %>
+   <% end %>
+  </div>
+
+  <%= f.submit %>
+ <% end %>
+
+</div>
