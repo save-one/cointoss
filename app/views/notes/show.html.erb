@@ -1,19 +1,38 @@
-<div>
+<div class="whole_form">
 
- <%= form_for(@note, url: note_path, html: {:class => "form-group"}) do |f| %>
- <div>
-  <%= f.label :title %>
-  <%= f.text_field :title %>
- </div>
+	<!-- note -->
+	<%= form_for(@note, url: note_path, html: {:class => "form-group, note_form"}) do |fn| %>
+		<div class="title">
+			<%= fn.label :title %>
+			<%= fn.text_field :title %>
+		</div>
+		<%= fn.submit %>
+	<% end %>
 
-  <div>
-   <%= f.fields_for(:targets) do |ft| %>
-    <%= f.label :name %>
-  	<%= ft.text_field :name %>
-   <% end %>
-  </div>
+	<!-- target -->
+	<div class="main_form">
+		<% @targets.each do |t| %>
+			<div class="col-lg-6">
+				<%= form_for(t, url: target_path(t.id), html: {:class => "form-group, target_form"}) do |ft| %>
+					<div class="name">
+						<%= ft.label :name %>
+						<%= ft.text_field :name %>
+						<%= ft.submit %>
+					</div>
+				<% end %>
 
-  <%= f.submit %>
- <% end %>
+				<!-- element -->
+				<% elements = Element.find_by_sql(['select * from elements join target_elements on target_elements.element_id = elements.id where target_id = ?', t.id]) %>
+				<% elements.each do |e| %>
+					<%= form_for(e, url: element_path(e.id), html: {:class => "form-group, element_form"}, onsubmit: "doSomething();return false;") do |fe| %>
+						<%= fe.text_field :item %>
+						<%= fe.text_field :content %>
+						<%= fe.submit %>
+					<% end %>
+				<% end %>
+			</div>
+
+		<% end %>
+	</div>
 
 </div>
