@@ -3,33 +3,51 @@
 	<!-- note -->
 	<%= form_for(@note, url: note_path, html: {:class => "form-group, note_form"}) do |fn| %>
 		<div class="title">
-			<%= fn.label :title %>
-			<%= fn.text_field :title %>
+			<label>ノートの題名</label>
+			<%= fn.text_field :title, class: "form-control title_input" %>
 		</div>
-		<%= fn.submit %>
+		<%= fn.submit class: "submit" %>
 	<% end %>
 
 	<!-- target -->
-	<div class="main_form">
+	<div class="main_form row">
+		<% target_number = 1 %>
 		<% @targets.each do |t| %>
 			<div class="col-lg-6">
+				<div class="target clearfix">
+
+					<!-- icon -->
+					<div class="text-center">
+						<span class="target_icon">候補<%= target_number %></span>
+						<% target_number += 1 %>
+						<div class="target_icon_space"></div>
+					</div>
+
+				<!-- form -->
 				<%= form_for(t, url: target_path(t.id), html: {:class => "form-group, target_form"}) do |ft| %>
 					<div class="name">
-						<%= ft.label :name %>
-						<%= ft.text_field :name %>
-						<%= ft.submit %>
+						<%= ft.text_field :name, class: "form-control name_input" %>
+						<%= ft.submit class: "submit" %>
 					</div>
 				<% end %>
 
 				<!-- element -->
 				<% elements = Element.find_by_sql(['select * from elements join target_elements on target_elements.element_id = elements.id where target_id = ?', t.id]) %>
 				<% elements.each do |e| %>
+
+					<!-- form -->
 					<%= form_for(e, url: element_path(e.id), html: {:class => "form-group, element_form"}, onsubmit: "doSomething();return false;") do |fe| %>
-						<%= fe.text_field :item %>
-						<%= fe.text_field :content %>
-						<%= fe.submit %>
+						<div class="col-lg-3">
+							<%= fe.select :item, {"特徴" => "特徴"}, {}, class: "form-control item_input" %>
+						</div>
+						<div class="col-lg-9">
+							<%= fe.text_field :content, class: "form-control content_input" %>
+						</div>
+						<%= fe.submit class: "submit" %>
 					<% end %>
+
 				<% end %>
+				</div>
 			</div>
 
 		<% end %>
