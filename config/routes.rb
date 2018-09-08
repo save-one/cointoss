@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :targets, only: [:create, :update, :destroy]
 
   resources :elements, only: [:create, :update, :destroy]
+  get "elements/add" => "elements#add", as: "element_add"
 
   # resources :items, only: [:create, :update, :destroy]
 

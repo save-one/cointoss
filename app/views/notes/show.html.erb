@@ -33,10 +33,40 @@
 
 				<!-- element -->
 				<% elements = Element.find_by_sql(['select * from elements join target_elements on target_elements.element_id = elements.id where target_id = ?', t.id]) %>
-				<% elements.each do |e| %>
+
+					<table class="table table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>item</th><th>content</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% elements.each do |e| %>
+								<tr>
+									<%= form_for(e, url: element_path(e.id), html: {:class => "form-group, element_form"}) do |fe| %>
+										<td><%= fe.select :item, {"特徴" => "特徴"}, {}, class: "form-control item_input" %></td>
+										<td><%= fe.text_field :content, class: "form-control content_input" %></td>
+										<td>
+											<button type="button" value="+" class="add">+</button>
+											<!-- target_id application.js params for ajax -->
+											<span style="display: none"><%= t.id %></span>
+										</td>
+										<td><button type="button" value="-" class="del">-</button>
+											<!-- element_id application.js params for ajax -->
+											<span style="display: none"><%= e.id %></span>
+										</td>
+										<td class="submit"><%= fe.submit %></td>
+									<% end %>
+								</tr>
+							<% end %>
+						</tbody>
+					</table>
+
+					<!-- <% elements = Element.find_by_sql(['select * from elements join target_elements on target_elements.element_id = elements.id where target_id = ?', t.id]) %>
+					<% elements.each do |e| %> -->
 
 					<!-- form -->
-					<%= form_for(e, url: element_path(e.id), html: {:class => "form-group, element_form"}, onsubmit: "doSomething();return false;") do |fe| %>
+					<!-- <%= form_for(e, url: element_path(e.id), html: {:class => "form-group, element_form"}) do |fe| %>
 						<div class="col-lg-3">
 							<%= fe.select :item, {"特徴" => "特徴"}, {}, class: "form-control item_input" %>
 						</div>
@@ -44,9 +74,9 @@
 							<%= fe.text_field :content, class: "form-control content_input" %>
 						</div>
 						<%= fe.submit class: "submit" %>
-					<% end %>
+					<% end %> -->
 
-				<% end %>
+				<!-- <% end %> -->
 				</div>
 			</div>
 

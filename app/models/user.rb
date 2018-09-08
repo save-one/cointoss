@@ -7,4 +7,6 @@ class User < ApplicationRecord
          # :lockable,
          #twitter
          # :omniauthable, omniauth_providers: [:twitter]
+
+  has_many :note, :dependent => :destroy
 end
