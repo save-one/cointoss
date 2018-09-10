@@ -103,3 +103,12 @@
  	border: none !important;
  }
 
+ .sortable_placeholder {
+ 	height: 37px;
+ 	border: 2px dashed #00adb5;
+ 	/*background-color: #00adb5;*/
+ }
+
+ .ui_sortable_handle {
+ 	width: 100%;
+ }

@@ -26,13 +26,13 @@ $(document).ready(function() {
 			data: {target_id: $(this).next('span').text()}
 		}).done(function(data) {
 			var clicked_tr = clicked.closest('tr');
-			clicked_tr.clone(true).insertAfter(clicked_tr);
+			clicked_tr.clone(true).css('display', 'none').insertAfter(clicked_tr).show('slow');
 			// id
 			clicked_tr.next('tr').children('form').attr('action', "/elements/new_made/" + data).attr('id', "edit_element_" + data);
 			// form
 			clicked_tr.next('tr').find('input').attr('form', "edit_element_" + data);
 			// submit => button for ajax .new_made and click
-			clicked_tr.next('tr').find("input[type='submit']").attr('type', 'button').addClass("new_made").val(data);
+			clicked_tr.next('tr').find("input[type='submit']").attr('type', 'button').addClass("new_made").val(data).prop("disabled", false).click();
 		}).fail(function(data) {
 			alert("sorry... this is an error...");
 		// }).always(function() {
@@ -73,6 +73,7 @@ $(document).ready(function() {
 	}
 	// keyup for set setTimeForChange()
 	$(document).on('keyup', 'input, textarea, select', function() {
+		clearTimeout(set);
 		setTimeForChange(this);
 	});
 
@@ -138,6 +139,35 @@ $(document).ready(function() {
 	$('textarea').each(function() {
 		textAreaResize(this);
 	});
+
+	//
+	// let sortable = Sortable.create(element_tbody, {
+	// 	group: "element_tbody",
+	// 	handle: ".element_tr",
+	// 	animate: 100
+	// });
+	function sortableHelper(e, ui) { //ui => tr of target
+		ui.children().each(function() {
+			$(this).width($(this).width());
+		});
+		return ui;
+	}
+	$('#element_table tbody').sortable({
+		revert: true,
+		helper: sortableHelper,
+		placeholder: "sortable_placeholder",
+		item: "#element_table tbody tr",
+		opacity: 0.8,
+		cursor: "move",// ?
+		axis: "y"
+		// sort: function() {
+		// 	var width = $(this).css('height');
+		// 	console.log(height);
+		// 	$('.sortable_placeholder').css('height', height);
+		// }
+	});
+	// $('#element_table tbody').sortable("option", "placeholder", "sortable_placeholder");
+	$('#element_table tbody').disableSelection();
 
 });
 

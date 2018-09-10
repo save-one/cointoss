@@ -35,7 +35,7 @@
 				<% elements = Element.find_by_sql(['select * from elements join target_elements on target_elements.element_id = elements.id where target_id = ?', t.id]) %>
 				<% item_list = {"特徴" => "特徴", "メリット" => "メリット"} %>
 
-					<table class="table">
+					<table class="table" id="element_table">
 						<!-- <thead>
 							<tr>
 								<th>item</th><th>content</th>
@@ -43,7 +43,7 @@
 						</thead> -->
 						<tbody>
 							<% elements.each do |e| %>
-								<tr>
+								<tr class="element_tr">
 									<%= form_for(e, url: element_path(e.id), html: {:class => "form-group, element_form"}) do |fe| %>
 										<td><%= fe.select :item, item_list, {}, class: "form-control item_input" %></td>
 										<td class="content_td"><%= fe.text_area :content, class: "form-control content_input cancelEnter", autocomplete: "off" %></td>
