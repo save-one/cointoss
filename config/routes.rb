@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   resources :elements, only: [:create, :update, :destroy]
   get "elements/add" => "elements#add", as: "element_add"
+  patch "elements/new_made/:id" => "elements#new_made_update", as: "element_new_made_update"
 
   # resources :items, only: [:create, :update, :destroy]
 

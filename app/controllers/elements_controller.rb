@@ -9,6 +9,11 @@ class ElementsController < ApplicationController
 		element.update(element_params)
 	end
 
+	def new_made_update
+		element = Element.find(params[:id])
+		element.update(item: params[:item], content: params[:content])
+	end
+
 	def destroy
 		element = Element.find(params[:id])
 		element.destroy

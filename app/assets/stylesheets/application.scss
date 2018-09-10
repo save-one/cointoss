@@ -51,30 +51,55 @@
  }
 
  .title_input {
- 	font-size: 40px !important;
- 	height: 70px !important;
+ 	font-size: 28px !important;
+ 	height: 44px !important;
+ 	color: #00adb5 !important;
 
  	border: none !important;
  }
 
  .name_input {
- 	font-size: 30px !important;
- 	height: 60px !important;
+ 	font-size: 22px !important;
+ 	/*height => .name .form-control*/
+ 	font-weight: bold;
+ 	/*word-wrap: break-word;*/
+ 	resize: none;
+
+ 	border: none !important;
+ }
+
+ .name .form-control {
+ 	height: 43px;
  }
 
  .item_input {
- 	font-size: 22px !important;
- 	height: 45px !important;
- 	background-color: #5bc0de !important;
- 	color: #fff !important;
+ 	font-size: 14px !important;
+ 	/*height: 45px !important;*/
+ 	/*background-color: #5bc0de !important;
+ 	color: #fff !important;*/
  }
 
  .content_input {
- 	font-size: 22px !important;
- 	height: 45px !important;
+ 	font-size: 18px !important;
+ 	/*height: 37px; => .content_td .form-control*/
+ 	resize: none;
+
+	/*border: none !important;*/
+ 	overflow: hidden;
+ }
+
+ .content_td .form-control {
+ 	height: 37px;
  }
 
  .main_form {
  	margin-top: 70px;
+ }
+
+ .add {
+ 	border: none !important;
+ }
+ .del {
+ 	border: none !important;
  }
 

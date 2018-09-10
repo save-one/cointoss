@@ -24,43 +24,34 @@ $(document).ready(function() {
 			url: "/elements/add",
 			type: "GET",
 			data: {target_id: $(this).next('span').text()}
-			// success: function(data) {
-			// 	alert("success");
-			// },
-			// error: function(data) {
-			// 	alert("sorry... this is an error...");
-			// }
 		}).done(function(data) {
-			var clicked_pp = clicked.parent().parent();
-			clicked_pp.clone(true).insertAfter(clicked.parent().parent());
-			clicked_pp.next('tr').children('form').attr('action', "/elements/" + data).attr('id', "edit_element_" + data);
-			clicked_pp.next('tr').find("input[type='submit']").addClass("new_made").val(data);
-			clicked_pp.next('tr').find('input').attr('form', "edit_element_" + data);
+			var clicked_tr = clicked.closest('tr');
+			clicked_tr.clone(true).insertAfter(clicked_tr);
+			// id
+			clicked_tr.next('tr').children('form').attr('action', "/elements/new_made/" + data).attr('id', "edit_element_" + data);
+			// form
+			clicked_tr.next('tr').find('input').attr('form', "edit_element_" + data);
+			// submit => button for ajax .new_made and click
+			clicked_tr.next('tr').find("input[type='submit']").attr('type', 'button').addClass("new_made").val(data);
 		}).fail(function(data) {
 			alert("sorry... this is an error...");
+		// }).always(function() {
+		// 	$(this).closest('tr').next('tr').find("input[type='button']").click();
+		// 	console.log($(this).closest('tr').next('tr').find("input[type='button']"));
 		});
-
-		// $(document).ajaxStop(function() {
-		// 	console.log(result + response);
-		// 	if (result === "success") {
-		// 		$(this).parent().parent().clone(true).insertAfter($(this).parent().parent());
-		// 		$(this).parent().parent().next('tr').children("form").attr('action', "/elements/" + response).attr('id', "edit_element_" + response);
-		// 		console.log("last");
-		// 	} else {
-		// 		alert("sorry... this is an error...");
-		// 	}
-		// });
 
 	});
 
 	// for new made element_form & HTTP POST => PUT
 	$(document).on('click', '.new_made', function() {
 		var clicked = $(this);
+		console.log(clicked.closest('tr').find(".item_input").val());
+		console.log(clicked.closest('tr').find(".content_input").val());
 		$.ajax({
-			url: "/elements/" + clicked.val(),
-			type: PUT,
-			data: {item: clicked.parent().parent().find(".item_input").val(),
-						content: clicked.parent().parent().find(".content_input").val()},
+			url: "/elements/new_made/" + clicked.val(),
+			type: "PATCH",
+			data: {item: clicked.closest('tr').find(".item_input").val(),
+						content: clicked.closest('tr').find(".content_input").val()},
 		}).done(function(data) {
 			console.log('success');
 		}).fail(function() {
@@ -71,15 +62,33 @@ $(document).ready(function() {
 	// first => disalbed
 	$('input[type="submit"]').prop('disabled', true);
 
-	// change => abled
-	$(document).on('change', 'input', function() {
-		var submit = $(this).parents('tr, div').find('input[type="submit"]');
+	// raise changeEvent when cursol stay
+	var set;
+	function setTimeForChange(input) {
+		console.log("set");
+		set = setTimeout(function() {
+						console.log("timeout");
+						$(input).change();
+					}, 10000);
+	}
+	// keyup for set setTimeForChange()
+	$(document).on('keyup', 'input, textarea, select', function() {
+		setTimeForChange(this);
+	});
+
+	// change disabled => abled, setTimeout => clear
+	$(document).on('change', 'input, textarea, select', function() {
+		clearTimeout(set);
+		console.log("clear");
+		var submit = $(this).closest('tr, div').find('input[type="submit"], .new_made');
 		submit.prop('disabled', false).click();
+		console.log("ok");
+
 	});
 
 	// delete element_form
 	$(document).on('click', '.del', function() {
-		var form = $(this).parents('tr'),
+		var form = $(this).closest('tr'),
 				element_id = $(this).next('span').text();
 		if(form.parent().children().length > 1) {
 			alert("本当に削除しますか？\nAre you sure you want to delete this?");
@@ -100,4 +109,35 @@ $(document).ready(function() {
 		}
 	});
 
+	//cancel enterkey /n
+	$('.cancelEnter').on('keydown', function(e) {
+		if(e.which == 13) {
+			return false;
+		}
+	}).on('blur', function() {
+		// for copy paste
+		var $textarea = $(this),
+				text = $textarea.val(),
+				new_text = text.replace(/\n/g, "");
+		if (new_text != text) {
+			$textarea.val(new_text);
+		}
+	});
+
+	// textarea height resize
+	function textAreaResize(textarea) {
+		var height = $(textarea).css('height'),
+				scroll_height = textarea.scrollHeight;
+		if (height != scroll_height) {
+			$(textarea).css('height', scroll_height);
+		}
+	}
+	$('textarea').on('keyup', function() {
+		textAreaResize(this);
+	});
+	$('textarea').each(function() {
+		textAreaResize(this);
+	});
+
 });
+
